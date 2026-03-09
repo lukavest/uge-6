@@ -1,0 +1,7 @@
+https://gps-coordinates.org/distance-between-coordinates.php
+
+55.7342,12.3891	Specialisterne
+
+55.7664,12.5263	Jægersborg	9.30 KM		Stationshøjde: 40 m
+55.6861,12.5439 Landbohøjskolen	11.07 KM
+55.8764,12.4121	Sjælsmark	15.88 KM
