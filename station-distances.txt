@@ -1,7 +1,20 @@
 https://gps-coordinates.org/distance-between-coordinates.php
+https://www.dmi.dk/friedata/dokumentation/data/climate-data-stations
 
-55.7342,12.3891	Specialisterne
+55.7342,12.3891	Specialisterne Ballerup, Lautruphøj 1-3 A, 2750 Ballerup
 
-55.7664,12.5263	Jægersborg	9.30 KM		Stationshøjde: 40 m
+55.7664,12.5263	Jægersborg	9.30 KM		06181
 55.6861,12.5439 Landbohøjskolen	11.07 KM
 55.8764,12.4121	Sjælsmark	15.88 KM
+
+
+55.4033,10.3983	Specialisterne Odense, Kochsgade 31, 5000 Odense C
+
+55.4735	10.3297	Odense Lufthavn	8.93 KM		06120
+55.3088,10.4398	Årslev		10.83 KM
+
+
+56.1554,10.2111	Specialisterne Århus, Kannikegade 18, 1. sal, 8000 Aarhus
+56.3027,10.1272	Ødum		17.18 KM	06072
+56.1618,9.9033	Galten		19.07 KM 		
+56.0954,10.5134 Sletterhage Fyr 19.89 KM
