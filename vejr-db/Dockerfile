@@ -8,4 +8,4 @@ COPY connection.py .
 RUN pip install psycopg2-binary
 RUN pip install requests
 
-CMD ["python", "spac-data.py"]
+CMD ["python", "spac.py"]
