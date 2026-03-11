@@ -45,7 +45,7 @@ class Connection:
         """Commit the current transaction."""
         self.conn.commit()
 
-    def close(self, commit=True):
+    def close(self, commit=False):
         """Close the database connection."""
         if commit:
             self.commit()

@@ -101,8 +101,8 @@ def insert_records(src_id,records_lst,ignore_conflict=True,commit=False):
 def update_table(src_id):
     table_name = table_names[src_id]
     print(f"Updating {src_id} records...")
-    n_records = 1
-    while n_records > 0:
+    n_records = max_limit
+    while n_records == max_limit:
         try:
             mx = conn.query_fetch(f"SELECT MAX(timestamp) FROM {table_name}")[0][0]
             mx = mx.replace(microsecond=mx.microsecond+1)

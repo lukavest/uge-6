@@ -16,11 +16,11 @@ col_names   = base_cols + parameters
 cols = list(zip(col_names,col_types))
 
 
-def create_table(drop_first=False):
+def create_table(tbl_name=table_name,columns=cols,drop_first=False):
     if drop_first:
-        conn.execute(f"DROP TABLE IF EXISTS {table_name}")
-    cols_str = ', '.join([f"{name} {tp}" for name,tp in cols])
-    conn.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({cols_str})")
+        conn.execute(f"DROP TABLE IF EXISTS {tbl_name}")
+    cols_str = ', '.join([f"{name} {tp}" for name,tp in columns])
+    conn.execute(f"CREATE TABLE IF NOT EXISTS {tbl_name} ({cols_str})")
 
 def insert_data(data,param,ignore_conflict=True):
     col_names_str = ','.join(base_cols + [param])
@@ -51,15 +51,23 @@ def get_observations(ids=station_ids,params=parameters,lim=10,ignore_conflict=Tr
 
 def group_table(commit_first=True):
     # WIP
+    group_cols = cols[1:]
+    print(group_cols)
 
-    if commit_first:
-        conn.commit()
-    conn.execute(f"CREATE INDEX IF NOT EXISTS {table_name}_idx ON {table_name} (id,timestamp)")
+    create_table("dmi_dense",group_cols)
+    # if commit_first:
+    #     conn.commit()
+
+
+    #create_table(columns=cols,drop_first=True)
+    #conn.execute(f"CREATE INDEX IF NOT EXISTS {table_name}_idx ON {table_name} (id,timestamp)")
 
 def main():
-    create_table()
-    get_observations()
-    conn.close(commit=True)
+    #create_table()
+    #get_observations()
+    #conn.commit()
+    group_table(False)
+    conn.close()
 
 if __name__ == "__main__":
     main()
