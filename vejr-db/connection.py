@@ -7,23 +7,28 @@ run_locally = True
 
 class Connection:
     """Small psycopg2 wrapper for executing SQL and fetching results (optionally as a DataFrame)."""
-    if run_locally:
-        db_host = "localhost"
-        db_port = "5433"
-    else:
-        db_host = os.getenv("DB_HOST", "db")
-        db_port = os.getenv("DB_PORT", "5432")
-    db_name = os.getenv("POSTGRES_DB", "vejr")
-    db_user = os.getenv("POSTGRES_USER", "postgres")
-    db_pass = os.getenv("POSTGRES_PASSWORD", "postgres")
-    conn = psycopg2.connect(
-        host=db_host,
-        port=int(db_port),  # Cast to int since env vars are strings
-        dbname=db_name,
-        user=db_user,
-        password=db_pass
-    )
-    cur = conn.cursor()
+
+    def __init__(self):
+
+        if run_locally:
+            db_host = "localhost"
+            db_port = "5433"
+        else:
+            db_host = os.getenv("DB_HOST", "db")
+            db_port = os.getenv("DB_PORT", "5432")
+
+        db_name = os.getenv("POSTGRES_DB", "vejr")
+        db_user = os.getenv("POSTGRES_USER", "postgres")
+        db_pass = os.getenv("POSTGRES_PASSWORD", "postgres")
+
+        self.conn = psycopg2.connect(
+            host=db_host,
+            port=int(db_port),  # Cast to int since env vars are strings
+            dbname=db_name,
+            user=db_user,
+            password=db_pass
+        )
+        self.cur = self.conn.cursor()
 
     def execute(self, query_str: str, args=None):
         """Execute SQL; on error prints the exception and rolls back."""
