@@ -1,6 +1,6 @@
 from connection import Connection
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 max_limit = 5000
 url = "https://climate.spac.dk/api/records"
@@ -115,11 +115,19 @@ def update_table(src_id):
         if n_records > 0:
             insert_records(src_id,records,commit=True)
 
+def create_all(drop_first=False):
+    for source_id in source_ids:
+        create_table(source_id,drop_first)
+
+def update_all():
+    for source_id in source_ids:
+        update_table(source_id)
+
 def main():
     for source_id in source_ids:
         create_table(source_id)
         update_table(source_id)
-    conn.close(commit=True)
-
+    conn.commit()
+    conn.close()
 if __name__ == "__main__":
     main()

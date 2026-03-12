@@ -1,6 +1,8 @@
 import psycopg2
 import os
+import pandas as pd
 
+# set True to run locally, otherwise uses docker
 run_locally = True
 
 class Connection:
@@ -37,9 +39,9 @@ class Connection:
         self.execute(query_str)
         return self.cur.fetchall()
 
-    # def query_fetch_df(self, query_str: str):
-    #     """Run a query and return as a pandas DataFrame."""
-    #     return pd.DataFrame(self.query_fetch(query_str), columns=[desc.name for desc in self.cur.description])
+    def query_fetch_df(self, query_str: str):
+        """Run a query and return as a pandas DataFrame."""
+        return pd.DataFrame(self.query_fetch(query_str), columns=[desc.name for desc in self.cur.description])
 
     def commit(self):
         """Commit the current transaction."""
