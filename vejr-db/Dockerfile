@@ -8,7 +8,7 @@ COPY connection.py .
 
 RUN pip install psycopg2-binary
 RUN pip install requests
-RUN pip install pandas
-RUN pip install numpy
+#RUN pip install pandas
+#RUN pip install numpy
 
 CMD ["python", "spac.py"]

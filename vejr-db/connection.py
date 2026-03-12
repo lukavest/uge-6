@@ -1,8 +1,10 @@
 import psycopg2
 import os
-import pandas as pd
+from pathlib import Path
+from dotenv import load_dotenv
+# import pandas as pd
 
-# set True to run locally, otherwise uses docker
+load_dotenv(Path(__file__).with_name(".env"))
 run_locally = True
 
 class Connection:
@@ -10,16 +12,14 @@ class Connection:
 
     def __init__(self):
 
+        db_host = os.getenv("DB_HOST")
+        db_port = os.getenv("DB_PORT")
+        db_name = os.getenv("POSTGRES_DB")
+        db_user = os.getenv("POSTGRES_USER")
+        db_pass = os.getenv("POSTGRES_PASSWORD")
         if run_locally:
             db_host = "localhost"
             db_port = "5433"
-        else:
-            db_host = os.getenv("DB_HOST", "db")
-            db_port = os.getenv("DB_PORT", "5432")
-
-        db_name = os.getenv("POSTGRES_DB", "vejr")
-        db_user = os.getenv("POSTGRES_USER", "postgres")
-        db_pass = os.getenv("POSTGRES_PASSWORD", "postgres")
 
         self.conn = psycopg2.connect(
             host=db_host,
@@ -43,10 +43,10 @@ class Connection:
         """Run a query and return all rows as a list of tuples."""
         self.execute(query_str)
         return self.cur.fetchall()
-
-    def query_fetch_df(self, query_str: str):
-        """Run a query and return as a pandas DataFrame."""
-        return pd.DataFrame(self.query_fetch(query_str), columns=[desc.name for desc in self.cur.description])
+    #
+    # def query_fetch_df(self, query_str: str):
+    #     """Run a query and return as a pandas DataFrame."""
+    #     return pd.DataFrame(self.query_fetch(query_str), columns=[desc.name for desc in self.cur.description])
 
     def commit(self):
         """Commit the current transaction."""

@@ -16,7 +16,7 @@ col_names = base_cols + parameters
 cols = list(zip(col_names, col_types))
 
 min_date = datetime(2026, 3, 9, tzinfo=timezone.utc)
-
+interval_mins = 10
 
 def utc_str(dt):
     return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -55,7 +55,7 @@ class DMIClient:
         for sid in station_ids:
             print(f" station id = {sid}")
             for param in parameters:
-                print(f"   parameter = {param}\t", end="")
+                print(f"   {param}\t", end="")
                 url = (
                     "https://opendataapi.dmi.dk/v2/metObs/collections/observation/items"
                     f"?stationId={sid}&parameterId={param}&limit={lim}&datetime={time_str}"
@@ -77,8 +77,15 @@ class DMIClient:
 
     def get_all_data(self):
         t1 = datetime.now(timezone.utc)
-        t1 = t1.replace(microsecond=0, second=0, minute=t1.minute // 10 * 10)
+        t1 = t1.replace(microsecond=0, second=0, minute=t1.minute // interval_mins * interval_mins)
         time_str = f"{utc_str(min_date)}/{utc_str(t1)}"
+        self.get_observations(time_str, lim=1000)
+
+    def get_new_data(self):
+        mx = self.conn.query_fetch(f"SELECT MAX(timestamp) FROM dmi_readings")[0][0]
+
+        t = mx.replace(microsecond=0, second=0, minute=mx.minute + interval_mins)
+        time_str = f"{utc_str(t)}/.."
         self.get_observations(time_str, lim=1000)
 
     def densify(self):
@@ -94,13 +101,17 @@ class DMIClient:
             ON CONFLICT (timestamp, source_id) DO UPDATE SET {update_cols}
         """)
 
+        # remove rows with null values
+        null_str = " OR ".join([f"{p} IS NULL" for p in parameters])
+        self.conn.execute(f"DELETE FROM dmi_dense WHERE {null_str}")
 
 def main():
     conn = Connection()
     dmi = DMIClient(conn)
     dmi.create_main_table()
     dmi.create_group_table()
-    dmi.get_all_data()
+    # dmi.get_all_data()
+    dmi.get_new_data()
     dmi.densify()
     conn.commit()
     conn.close()
