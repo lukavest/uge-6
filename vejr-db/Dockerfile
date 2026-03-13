@@ -2,13 +2,11 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY spac.py .
-COPY dmi.py .
-COPY connection.py .
+COPY etl ./etl
+COPY main.py .
+COPY requirements.txt .
 
-RUN pip install psycopg2-binary
-RUN pip install requests
-#RUN pip install pandas
-#RUN pip install numpy
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "spac.py"]
+
+CMD ["python", "main.py", "all"]
