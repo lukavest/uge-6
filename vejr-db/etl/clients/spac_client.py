@@ -3,7 +3,6 @@ from datetime import datetime
 
 from etl.config import settings
 from etl.utils.http import get_json
-
 logger = logging.getLogger(__name__)
 
 

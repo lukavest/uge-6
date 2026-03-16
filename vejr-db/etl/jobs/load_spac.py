@@ -3,7 +3,7 @@ import logging
 from etl.clients.spac_client import SpacClient
 from etl.config import settings
 from etl.db.connection import Connection
-from etl.db.repositories import create_spac_tables, get_latest_timestamp, insert_spac_rows
+from etl.db.repositories import create_spac_tables, get_latest_timestamp, insert_spac_rows, resample_spac_data
 from etl.db.schema import SPAC_COLUMNS, SPAC_TABLE_NAMES, SPAC_SOURCE_IDS
 
 logger = logging.getLogger(__name__)
@@ -11,19 +11,22 @@ logger = logging.getLogger(__name__)
 
 def run() -> None:
     client = SpacClient()
-
+    print("spac run") # TODO make this run , test resampling
     with Connection() as conn:
         create_spac_tables(conn)
 
         for sid in SPAC_SOURCE_IDS:
             table_name = SPAC_TABLE_NAMES[sid]
-            cols = SPAC_COLUMNS[sid]
+            #cols = SPAC_COLUMNS[sid]
+            col_names = [t[0] for t in SPAC_COLUMNS[sid]]
 
             latest = get_latest_timestamp(conn, table_name)
             raw = client.fetch_records(sid,start=latest)
             rows = client.transform_records(raw,sid)
-            insert_spac_rows(conn, table_name, cols, rows)
-            logger.info("Inserted %s SPAC %s rows", len(rows), sid)
+            insert_spac_rows(conn, table_name, col_names, rows)
+            logger.info("Inserted %s SPAC %s rows ", len(rows), sid)
+            print("resampling")
+            resample_spac_data(conn, table_name)
 
         # latest_bme = get_latest_spac_timestamp(conn, settings.spac_bme_table_name)
         # raw_bme = client.fetch_records("BME280", start=latest_bme)
