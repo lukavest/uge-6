@@ -4,7 +4,7 @@ from etl.config import settings
 DMI_COLUMNS = [
     ("timestamp", "TIMESTAMPTZ"),
     ("source_id", "CHAR(5)"),
-    ("temp_dry", "FLOAT"),
+    ("temperature", "FLOAT"),
     ("temp_dew", "FLOAT"),
     ("humidity", "FLOAT"),
     ("pressure", "FLOAT"),

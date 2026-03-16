@@ -12,7 +12,7 @@ def get_json(url: str, headers: dict | None = None, params: dict | None = None) 
         url,
         headers=headers,
         params=params,
-        timeout=settings.request_timeout_seconds,
+        timeout=settings.request_timeout_seconds
     )
     response.raise_for_status()
     return response.json()
