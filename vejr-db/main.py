@@ -4,7 +4,7 @@ import logging
 from etl.jobs.load_all import run as run_all
 from etl.jobs.load_dmi import run as run_dmi
 from etl.jobs.load_spac import run as run_spac
-from etl.utils.logging import configure_logging
+from etl.utils.logs import configure_logging
 
 
 def main() -> None:

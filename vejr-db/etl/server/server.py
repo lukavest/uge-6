@@ -1,9 +1,7 @@
-
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import matplotlib
 matplotlib.use("Agg")
-
 
 from etl.server.plot import build_plot
 
@@ -38,8 +36,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 def run() -> None:
-    server = HTTPServer(("127.0.0.1", 8000), RequestHandler)
-    print("Server running at http://127.0.0.1:8000")
+    server = HTTPServer(("0.0.0.0", 8000), RequestHandler)
+    print("Server running at http://0.0.0.0:8000")
     server.serve_forever()
 
 

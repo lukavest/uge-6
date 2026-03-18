@@ -1,7 +1,5 @@
 import logging
-
 import psycopg2
-
 from etl.config import settings
 
 logger = logging.getLogger(__name__)

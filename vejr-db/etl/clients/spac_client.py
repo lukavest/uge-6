@@ -3,13 +3,12 @@ from datetime import datetime
 
 from etl.config import settings
 from etl.utils.http import get_json
+from etl.db.constants import SPAC_SOURCE_IDS, SPAC_BASE_URL
+
 logger = logging.getLogger(__name__)
 
 
 class SpacClient:
-    base_url = "https://climate.spac.dk/api/records"
-    source_ids = ["BME280", "DS18B20"]
-    table_names = {src_id: src_id.lower() + "_readings" for src_id in source_ids}
 
     def _headers(self) -> dict:
         if not settings.spac_api_token:
@@ -17,14 +16,14 @@ class SpacClient:
         return {"Authorization": f"Bearer {settings.spac_api_token}"}
 
     def fetch_records(self, source_id: str, start: datetime | None = None, limit: int | None = None) -> list[dict]:
-        if source_id not in self.source_ids:
+        if source_id not in SPAC_SOURCE_IDS:
             raise ValueError(f"Unsupported source_id: {source_id}")
 
         params = {"limit": limit or settings.spac_max_api_limit}
         if start is not None:
             params["from"] = start.isoformat()
 
-        data = get_json(self.base_url, headers=self._headers(), params=params)
+        data = get_json(SPAC_BASE_URL, headers=self._headers(), params=params)
         return data.get("records", [])
 
     @staticmethod
@@ -41,9 +40,9 @@ class SpacClient:
                     record["id"],
                     record["timestamp"],
                     "BME280",
-                    bme.get("temperature"),
-                    bme.get("humidity"),
-                    bme.get("pressure", 0) / 100 if bme.get("pressure") is not None else None,
+                    str(bme.get("temperature")),
+                    str(bme.get("humidity")),
+                    str(bme.get("pressure", 0) / 100) if bme.get("pressure") is not None else None,
                 )
             )
         return rows

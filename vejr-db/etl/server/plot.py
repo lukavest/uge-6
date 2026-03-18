@@ -4,13 +4,18 @@ from datetime import timedelta
 import io
 
 from etl.db.connection import Connection
-from etl.db.repositories import get_latest_timestamp
+# from etl.db.repositories.base import get_latest_timestamp
 from etl.utils.time_utils import utc_str
 from etl.config import settings
+from etl.db.constants import DMI_TABLE_NAME,SPAC_TABLE_NAMES
+
+def get_latest_timestamp(conn,table_name: str):
+    row = conn.fetch_one(f"SELECT MAX(timestamp) FROM {table_name}")
+    return None if row is None else row[0]
 
 labels = ["DMI Jægersborg", "BME280", "DS18B20"]
 source_ids = ["06181", "BME280", "DS18B20"]
-tables = [settings.dmi_table_name, settings.spac_bme_table_name, settings.spac_ds_table_name]
+tables = [DMI_TABLE_NAME, SPAC_TABLE_NAMES[source_ids[1]], SPAC_TABLE_NAMES[source_ids[2]]]
 
 def build_plot() -> bytes:
     # x = [1, 2, 3, 4]
